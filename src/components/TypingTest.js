@@ -3,7 +3,6 @@ import { useState } from 'react'
 import './styles/typingtest.css'
 import DisplayBox from './DisplayBox'
 import Menuy from './Menuy'
-//import ResultsBox from './ResultsBox'
 
 export default function TypingTest(){
     const [words, setWords] = useState("");              // words to type
@@ -11,7 +10,7 @@ export default function TypingTest(){
     const [currentIndex, setCurrentIndex] = useState(0); // current word/char position
     const [timer, setTimer] = useState(30);              // countdown timer
     const [isRunning, setIsRunning] = useState(false);   // has typing started?
-    const [results, setResults] = useState(null);        // store final result
+    const [results, setResults] = useState({correct:0, wrong:0,initTime:timer,time:0});        // store final result
 
 
     //random words
@@ -52,7 +51,7 @@ export default function TypingTest(){
 
     useEffect(() => {
         let time;
-        if (isRunning && timer >- 0) {
+        if (isRunning && timer > 0) {
           time = setInterval(() => {
             setTimer(prev => prev - 1);
           }, 1000);
@@ -61,16 +60,18 @@ export default function TypingTest(){
         return () => clearInterval(time);
       }, [isRunning, timer]);
 
+      
+
 
     return(
         <div className='typingtest'>
-            <div style={{ display: 'flex', gap: '0rem',color:'#ffbd2e',cursor:'pointer' }}>
+            <div onClick={() =>{ window.location.reload()}} style={{ display: 'flex', gap: '0rem',color:'#ffbd2e',cursor:'pointer' }}>
                 <h1>TypeSheet</h1>
-                <p style={{fontSize:'25px'}}
-                //onClick={() =>{ setIsRunning(false)}}
+                <p style={{fontSize:'25px', textAlign:'right'}}
                 >⌨️</p>
             </div>
             {!isRunning? <Menuy setTimer={setTimer}/>:""}
+
             <DisplayBox 
                 words={words}
                 setTypedText={setTypedText}
@@ -78,6 +79,10 @@ export default function TypingTest(){
                 timer={timer}
                 setTimer={setTimer}
                 setIsRunning={setIsRunning}
+                currentIndex={currentIndex}
+                setCurrentIndex={setCurrentIndex}
+                results={results}
+                setResults={setResults}
             />
 
         </div>
